@@ -18,7 +18,7 @@
     <div id="app">
   <div id="wrapper">
     <!-- Sidebar -->
-    <ul class="navbar-nav sidebar sidebar-light accordion" id="accordionSidebar">
+    <ul class="navbar-nav sidebar sidebar-light accordion"   v-show="$route.path === '/' || $route.path === '/register2' ? false : true " id="accordionSidebar">
       <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
         <div class="sidebar-brand-icon">
           <img src="img/logo/logo2.png">
@@ -112,7 +112,8 @@
     <div id="content-wrapper" class="d-flex flex-column">
       <div id="content">
         <!-- TopBar -->
-        <nav class="navbar navbar-expand navbar-light bg-navbar topbar mb-4 static-top">
+        <nav class="navbar navbar-expand navbar-light bg-navbar topbar mb-4 static-top" id="topbar"
+       v-show="$route.path === '/' || $route.path === '/register2' ? false : true"  >
           <button id="sidebarToggleTop" class="btn btn-link rounded-circle mr-3">
             <i class="fa fa-bars"></i>
           </button>
@@ -269,11 +270,12 @@
             </li>
             <div class="topbar-divider d-none d-sm-block"></div>
             <li class="nav-item dropdown no-arrow">
-              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
+              <!-- <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" -->
+                <!-- aria-haspopup="true" aria-expanded="false"> -->
                 <img class="img-profile rounded-circle" src="img/boy.png" style="max-width: 60px">
-                <span class="ml-2 d-none d-lg-inline text-white small">Maman Ketoprak</span>
-              </a>
+                <!-- <span class="ml-2 d-none d-lg-inline text-white small">Maman Ketoprak</span> -->
+                <router-link to="logout" style="color:white;font-weight: 300;">logout</router-link>
+              <!-- </a> -->
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                 <a class="dropdown-item" href="#">
                   <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -333,6 +335,13 @@
   <script src="js/ruang-admin.min.js"></script>
   <script src="vendor/chart.js/Chart.min.js"></script>
   <script src="js/demo/chart-area-demo.js"></script>  
+<script>
+  //console.log(store.getters["auth"]);
+  if(store.getters["auth/token"]){
+    $("#accordionSidebar").css("display","block");
+   $("#topbar").css("display","flex");
+  }
+</script>
 
 </body>
 

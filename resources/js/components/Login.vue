@@ -10,13 +10,19 @@
                   <div class="text-center">
                     <h1 class="h4 text-gray-900 mb-4">Login</h1>
                   </div>
+                      
                   <form class="user" @submit.prevent="signin()">
+
                     <div class="form-group">
                       <input type="text" class="form-control" id="name" 
-                        placeholder="Enter Name" v-model="form.name" required="required">
+                        placeholder="Enter Name" v-model="form.name" >
+                        <small v-if="errors.name" class="text-danger">{{errors.name[0]}}</small>
+                       <small v-if="errors.error" class="text-danger">{{errors.error}}</small>
                     </div>
                     <div class="form-group">
-                      <input type="password" class="form-control" required="required"  v-model="form.password" id="exampleInputPassword" placeholder="Password">
+                      <input type="password" class="form-control"  v-model="form.password" id="exampleInputPassword" placeholder="Password">
+                     <small v-if="errors.password" class="text-danger">{{errors.password[0]}}</small>
+                          <small v-if="errors.error" class="text-danger">{{errors.error}}</small>
                     </div>
                     <div class="form-group">
                      <!--  <div class="custom-control custom-checkbox small" style="line-height: 1.5rem;">
@@ -48,20 +54,58 @@
 </template>
 
 <script>
+  import Vue from 'vue'
+import {mapGetters} from 'vuex'
+import Swal from 'sweetalert2'
     export default {
        data(){
         return{
             form:{
                 name:null,
-                password:null
-            }
+                password:null,
+               
+            },
+            errors:{},
+             error:{
+             
+             },
         }
        },
        methods:{
+       //    getCookie(){
+         // it gets the cookie called `username`
+   //   const username = this.$store.getters.token; 
+       //    console.log(username);
+   // },
         signin(){
+          this.errors = {};
+          this.error = {};
+         this.$store.dispatch("auth/login")
  axios.post("/api/signin",this.form)
- .then(res => console.log(res.data))
- .catch(error => console.log(error.response.data))
+ .then((res) => 
+  {
+
+    Swal.fire(
+  'Good job!',
+  'login successfully',
+  'success'
+)
+    this.$store.commit("auth/login_success", {
+                    token: res.data.access_token,
+                  //  remember: this.remember
+                })
+     this.$store.dispatch('auth/fetchUser');
+   this.$router.push({name: 'home'})
+    $("#accordionSidebar").css("display","block");
+     $("#topbar").css("display","flex");
+    console.log(res.data);
+
+  })
+ .catch((error) => {
+  this.errors = error.response.data.errors;
+this.$store.commit("auth/login_failed", error.response.data)
+
+  })
         }
        }
     }

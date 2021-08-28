@@ -24,6 +24,10 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
+        "js-cookie": "^2.2.1",
+        "laravel-vue-pagination": "^2.3.1",
+        "noty": "^3.2.0-beta-deprecated",
+        "sweetalert2": "^11.0.19",
         "vue-router": "^3.5.2",
         "vuex": "^3.6.2"
     }
