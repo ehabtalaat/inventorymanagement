@@ -16,16 +16,19 @@ class SupplierController extends Controller
      */
      public function index()
     {
-       $suppliers= Supplier::paginate(1);
+       $suppliers= Supplier::all();
 
        return response()->json($suppliers);
     }
 
   public function searchsupplier(Request $request){
-    $name = $request->name;
+    if($name = $request->name){
         $suppliers = Supplier::where('name','LIKE',"%{$name}%")->paginate(1);
+    }else{
+        $suppliers= Supplier::paginate(1);
+    }
         return response()->json($suppliers);
-  }
+    }
     public function create()
     {
         //
@@ -47,11 +50,10 @@ class SupplierController extends Controller
         ]);
         
 
-         $supplier = new Employee;
+         $supplier = new Supplier;
          $supplier->name = $request->name;
          $supplier->email = $request->email;
          $supplier->phone = $request->phone;
-         $supplier->sallery = $request->sallery;
          $supplier->address = $request->address;
           if ($request->photo) {
          $position = strpos($request->photo, ';');
@@ -79,7 +81,7 @@ class SupplierController extends Controller
      */
     public function show($id)
     {
-        $employee = Employee::where('id',$id)->first();
+        $employee = Supplier::where('id',$id)->first();
           return response()->json($employee);
     }
 
@@ -111,11 +113,10 @@ class SupplierController extends Controller
         ]);
         
 
-          $employee = Employee::where('id',$id)->first();
+          $supplier = Supplier::where('id',$id)->first();
          $supplier->name = $request->name;
          $supplier->email = $request->email;
          $supplier->phone = $request->phone;
-         $supplier->sallery = $request->sallery;
          $supplier->address = $request->address;
           if ($request->newphoto) {
             if($employee->photo){
@@ -155,4 +156,3 @@ class SupplierController extends Controller
         return response()->json(['status' => true]);
     }
 }
-s

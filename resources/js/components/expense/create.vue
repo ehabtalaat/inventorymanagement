@@ -1,9 +1,11 @@
+  
+
 <template>
   
   <div>
 
  <div class="row">
-  <router-link to="/employee" class="btn btn-primary">All Employee </router-link>
+  <router-link to="/expense" class="btn btn-primary">All Expense </router-link>
    
  </div>
 
@@ -17,23 +19,44 @@
               <div class="col-lg-12">
                 <div class="login-form">
                   <div class="text-center">
-                    <h1 class="h4 text-gray-900 mb-4">Add category</h1>
+                    <h1 class="h4 text-gray-900 mb-4">Add Expense</h1>
                   </div>
-      <form class="user" @submit.prevent="categoryInsert" enctype="multipart/form-data">
+
+      <form class="user" @submit.prevent="expenseInsert">
+
         <div class="form-group">
+
           <div class="form-row">
-            <div class="col-md-6">
-         <input type="text" class="form-control" id="exampleInputFirstName" placeholder="Enter Your Full Name" v-model="form.name">
-       <small class="text-danger" v-if="errors.name"> {{ errors.name[0] }} </small>
-            </div>
+            <div class="col-md-12">
+         <label for="exampleFormControlTextarea1"><b>Expense Details</b></label>
+      <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" v-model="form.details"></textarea>
+  <small class="text-danger" v-if="errors.details"> {{ errors.details[0] }} </small> 
+            </div> 
+
+ <div class="col-md-12"><br>
+ 	<label for="exampleFormControlTextarea1"><b>Expense Amount</b></label>
+         <input type="text" class="form-control" id="exampleInputFirstName" placeholder="Enter Your Amount" v-model="form.amount">
+  <small class="text-danger" v-if="errors.amount"> {{ errors.amount[0] }} </small> 
+            </div> 
+
+
+            
+          </div>
         </div>
-      </div>
+       
+         
+ 
+
+
         <div class="form-group">
           <button type="submit" class="btn btn-primary btn-block">Submit</button>
         </div>
+        
       </form>
-          <hr>
-           <div class="text-center">
+                  <hr>
+                  <div class="text-center">
+  
+  
                   </div>
                   <div class="text-center">
                   </div>
@@ -59,29 +82,31 @@
         this.$router.push({name: '/'})
       }
     },
+
     data(){
     return {
       form:{
-        name: null,
+        details: '',
+        amount: ''
+        
       },
-      errors:{}
+      errors:{},
     }
   },
+
   methods:{
-  categoryInsert(){
-       axios.post('/api/category',this.form)
+    
+  expenseInsert(){
+       axios.post('/api/expense',this.form)
        .then(() => {
-       this.$router.push({ name: 'category'})
-      //  Notification.success()
-          Swal.fire(
-  'Good job!',
-  'category added  successfully',
-  'success'
-)
+        this.$router.push({ name: 'expense'})
+        Notification.success()
        })
        .catch(error =>this.errors = error.response.data.errors)
      },
   } 
+
+
   }
    
 </script>

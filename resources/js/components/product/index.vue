@@ -1,14 +1,15 @@
+ 
 
 <template>
   
   <div>
 
  <div class="row">
-  <router-link to="/createsupplier" class="btn btn-primary">Add supplier </router-link>
+  <router-link to="/store-product" class="btn btn-primary">Add Product </router-link>
    
  </div>
 <br>
-   <input type="text" v-model="searchTerm" @keyup="filtersearch()" class="form-control" style="width: 300px;" placeholder="Search Here">
+   <input type="text" v-model="searchTerm" class="form-control" style="width: 300px;" placeholder="Search Here">
 
 
 <br>
@@ -18,37 +19,40 @@
               <!-- Simple Tables -->
               <div class="card">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">supplier List</h6>
+                  <h6 class="m-0 font-weight-bold text-primary">Product List</h6>
                 </div>
                 <div class="table-responsive">
                   <table class="table align-items-center table-flush">
                     <thead class="thead-light">
                       <tr>
                         <th>Name</th>
+                        <th>Code</th>
                         <th>Photo</th>
-                        <th>Phone</th>
+                        <th>Category</th>
+                        <th>Buying Price</th>
+                        <th>Selling Price</th>
+                        <th>Root</th>
                         <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="supplier in suppliers.data" :key="supplier.id">
-                        <td> {{ supplier.name }} </td>
-                        <td><img :src="supplier.photo" id="em_photo"></td>
-                        <td>{{ supplier.phone }}</td>
+                      <tr v-for="product in filtersearch" :key="product.id">
+                        <td> {{ product.product_name }} </td>
+                        <td> {{ product.product_code }} </td>
+                        <td><img :src="product.image" id="em_photo"></td>
+                        <td>{{ product.category_name }}</td>
+                        <td>{{ product.buying_price }}</td>
+                        <td>{{ product.selling_price }}</td>
+                         <td>{{ product.root }}</td>
             <td>
-   <router-link :to="{name: 'editsupplier', params:{id:supplier.id}}" class="btn btn-sm btn-primary">Edit</router-link>
+   <router-link :to="{name: 'edit-product', params:{id:product.id}}" class="btn btn-sm btn-primary">Edit</router-link>
 
- <a @click="deleteEupplier(supplier.id)" class="btn btn-sm btn-danger"><font color="#ffffff">Delete</font></a>
+ <a @click="deleteProduct(product.id)" class="btn btn-sm btn-danger"><font color="#ffffff">Delete</font></a>
             </td>
                       </tr>
                     
                     </tbody>
                   </table>
-                  <pagination :data="suppliers" class="mx-auto" style="align-items: center;
-justify-content: center;" @pagination-change-page="filtersearch">
-                    <span slot="prev-nav">&lt; Previous</span>
-  <span slot="next-nav">Next &gt;</span>
-                  </pagination>
                 </div>
                 <div class="card-footer"></div>
               </div>
@@ -66,38 +70,34 @@ justify-content: center;" @pagination-change-page="filtersearch">
 
 
 <script type="text/javascript">
-  import Swal from 'sweetalert2'
+  
   export default {
-    // created(){
-    //   if (!User.loggedIn()) {
-    //     this.$router.push({name: '/'})
-    //   }
-    // },
+    created(){
+      if (!User.loggedIn()) {
+        this.$router.push({name: '/'})
+      }
+    },
     data(){
       return{
-        suppliers:{},
+        products:[],
         searchTerm:''
       }
     },
     computed:{
-     
+      filtersearch(){
+      return this.products.filter(product => {
+         return product.product_name.match(this.searchTerm)
+      }) 
+      }
     },
  
   methods:{
-    allSupplier(page = 1){
-      axios.get('/api/supplier/?page=' + page)
-      .then(({data}) => (this.suppliers = data))
+    allProduct(){
+      axios.get('/api/product/')
+      .then(({data}) => (this.products = data))
       .catch()
     },
-   filtersearch(){
-     axios.post('/api/searchsupplier',{'name' : this.searchTerm})
-  .then(({data}) => (this.suppliers = data))
-      .catch()
-      // return this.employees.filter(employee => {
-      //    return employee.name.match(this.searchTerm)
-      // }) 
-      },
-  deleteSupplier(id){
+  deleteProduct(id){
              Swal.fire({
               title: 'Are you sure?',
               text: "You won't be able to revert this!",
@@ -108,15 +108,14 @@ justify-content: center;" @pagination-change-page="filtersearch">
               confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
               if (result.value) {
-                axios.delete(`/api/supplier/${id}`)
+                axios.delete('/api/product/'+id)
                .then(() => {
-                this.suppliers = this.suppliers.data.filter(supplier => {
-                  return supplier.id != id
+                this.products = this.products.filter(product => {
+                  return product.id != id
                 })
-               this.filtersearch();
                })
                .catch(() => {
-                this.$router.push({name: 'supplier'})
+                this.$router.push({name: 'product'})
                })
                 Swal.fire(
                   'Deleted!',
@@ -125,12 +124,15 @@ justify-content: center;" @pagination-change-page="filtersearch">
                 )
               }
             })
+
   } 
+
   },
   created(){
-    this.filtersearch();
+    this.allProduct();
   } 
   
+
   } 
 </script>
 

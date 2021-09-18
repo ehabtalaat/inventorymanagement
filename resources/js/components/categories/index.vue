@@ -4,7 +4,7 @@
   <div>
 
  <div class="row">
-  <router-link to="/store-employee" class="btn btn-primary">Add Employee </router-link>
+  <router-link to="/createcategory class="btn btn-primary">Add category </router-link>
    
  </div>
 <br>
@@ -18,38 +18,31 @@
               <!-- Simple Tables -->
               <div class="card">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Employee List</h6>
+                  <h6 class="m-0 font-weight-bold text-primary">category List</h6>
                 </div>
                 <div class="table-responsive">
                   <table class="table align-items-center table-flush">
                     <thead class="thead-light">
                       <tr>
                         <th>Name</th>
-                        <th>Photo</th>
-                        <th>Phone</th>
-                        <th>Sallery</th>
-                        <th>Joining Date</th>
                         <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="employee in employees.data" :key="employee.id">
-                        <td> {{ employee.name }} </td>
-                        <td><img :src="employee.photo" id="em_photo"></td>
-                        <td>{{ employee.phone }}</td>
-                        <td>{{ employee.sallery }}</td>
-                        <td>{{ employee.joining_date }}</td>
+                      <tr v-for="category in categorys.data" :key="category.id">
+                        <td> {{ category.name }} </td>
+                     
             <td>
-   <router-link :to="{name: 'editemployee', params:{id:employee.id}}" class="btn btn-sm btn-primary">Edit</router-link>
+   <router-link :to="{name: 'editcategory', params:{id:category.id}}" class="btn btn-sm btn-primary">Edit</router-link>
 
- <a @click="deleteEmployee(employee.id)" class="btn btn-sm btn-danger"><font color="#ffffff">Delete</font></a>
+ <a @click="deletecategory(category.id)" class="btn btn-sm btn-danger"><font color="#ffffff">Delete</font></a>
             </td>
                       </tr>
                     
                     </tbody>
                   </table>
-                  <pagination :data="employees" class="mx-auto" style="align-items: center;
-justify-content: center;" @pagination-change-page="allEmployee">
+                  <pagination :data="categorys" class="mx-auto" style="align-items: center;
+justify-content: center;" @pagination-change-page="filtersearch">
                     <span slot="prev-nav">&lt; Previous</span>
   <span slot="next-nav">Next &gt;</span>
                   </pagination>
@@ -79,7 +72,7 @@ justify-content: center;" @pagination-change-page="allEmployee">
     // },
     data(){
       return{
-        employees:{},
+        categorys:{},
         searchTerm:''
       }
     },
@@ -88,20 +81,20 @@ justify-content: center;" @pagination-change-page="allEmployee">
     },
  
   methods:{
-    allEmployee(page = 1){
-      axios.get('/api/employee/?page=' + page)
-      .then(({data}) => (this.employees = data))
+    allcategory(page = 1){
+      axios.get('/api/searchcategory/?page=' + page)
+      .then(({data}) => (this.categorys = data))
       .catch()
     },
-   filtersearch(){
-     axios.post('/api/searchemployee',{'name' : this.searchTerm})
-  .then(({data}) => (this.employees = data))
+   filtersearch(page = 1){
+     axios.post('/api/searchcategory/?page=' + page,{'name' : this.searchTerm})
+  .then(({data}) => (this.categorys = data))
       .catch()
       // return this.employees.filter(employee => {
       //    return employee.name.match(this.searchTerm)
       // }) 
       },
-  deleteEmployee(id){
+  deletecategory(id){
              Swal.fire({
               title: 'Are you sure?',
               text: "You won't be able to revert this!",
@@ -112,15 +105,15 @@ justify-content: center;" @pagination-change-page="allEmployee">
               confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
               if (result.value) {
-                axios.delete(`/api/employee/${id}`)
+                axios.delete(`/api/category/${id}`)
                .then(() => {
-                this.employees = this.employees.data.filter(employee => {
-                  return employee.id != id
+                this.categorys = this.categorys.data.filter(category => {
+                  return category.id != id
                 })
-               this.allEmployee();
+               this.filtersearch();
                })
                .catch(() => {
-                this.$router.push({name: 'employee'})
+                this.$router.push({name: 'category'})
                })
                 Swal.fire(
                   'Deleted!',
@@ -132,7 +125,7 @@ justify-content: center;" @pagination-change-page="allEmployee">
   } 
   },
   created(){
-    this.allEmployee();
+    this.filtersearch();
   } 
   
   } 

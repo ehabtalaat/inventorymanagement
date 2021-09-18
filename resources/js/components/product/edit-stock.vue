@@ -1,9 +1,11 @@
+  
+
 <template>
   
   <div>
 
  <div class="row">
-  <router-link to="/category" class="btn btn-primary">All category </router-link>
+  <router-link to="/stock" class="btn btn-primary">Go Back </router-link>
    
  </div>
 
@@ -17,32 +19,28 @@
               <div class="col-lg-12">
                 <div class="login-form">
                   <div class="text-center">
-                    <h1 class="h4 text-gray-900 mb-4"> category Update</h1>
+                    <h1 class="h4 text-gray-900 mb-4"> Stock Update</h1>
                   </div>
 
-      <form class="user" @submit.prevent="categoryUpdate" enctype="multipart/form-data">
+      <form class="user" @submit.prevent="StockUpdate">
 
-     
+        <div class="form-group">
 
           <div class="form-row">
-            <div class="col-md-6">
-         <input type="text" class="form-control" id="exampleInputFirstName" placeholder="Enter Your Full Name" v-model="form.name">
-       <small class="text-danger" v-if="errors.name"> {{ errors.name[0] }} </small>
+            <div class="col-md-12">
+              <label for="exampleFormControlSelect1">Product Stock</label>
+         <input type="text" class="form-control" id="exampleInputFirstName" placeholder="Enter Your Product Name" v-model="form.product_quantity">
+       <small class="text-danger" v-if="errors.product_quantity"> {{ errors.product_quantity[0] }} </small>
             </div>
 
 
-    
+     
+            
+          </div>
         </div>
        
         
          
-
-   
-   
-       
-
- 
-
 
         <div class="form-group">
           <button type="submit" class="btn btn-primary btn-block">Update</button>
@@ -73,34 +71,45 @@
 <script type="text/javascript">
   
   export default {
+    created(){
+      if (!User.loggedIn()) {
+        this.$router.push({name: '/'})
+      }
+    },
 
     data(){
     return {
       form:{
-        name: ''
+         product_quantity: '' 
+        
       },
-      errors:{}
+      errors:{},
+   
     }
   },
   created(){
-      let id = this.$route.params.id
-    axios.get(`/api/category/${id}`)
-    .then(({data}) => {
-    this.form = data;
-        })
-    .catch(console.log('error'))
+  	let id = this.$route.params.id
+  	axios.get('/api/product/'+id)
+  	.then(({data}) => (this.form = data))
+  	.catch(console.log('error'))
+
+
   },
+
   methods:{
-  categoryUpdate(){
+    
+  StockUpdate(){
   	  let id = this.$route.params.id
-       axios.patch('/api/category/'+id,this.form)
+       axios.post('/api/stock/update/'+id,this.form)
        .then(() => {
-        this.$router.push({ name: 'category'})
+        this.$router.push({ name: 'stock'})
         Notification.success()
        })
        .catch(error =>this.errors = error.response.data.errors)
      },
   } 
+
+
   }
    
 </script>
@@ -109,5 +118,3 @@
 <style type="text/css">
   
 </style>
-
-  

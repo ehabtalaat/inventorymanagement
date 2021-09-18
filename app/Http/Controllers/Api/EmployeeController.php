@@ -22,8 +22,11 @@ class EmployeeController extends Controller
     }
 
   public function searchemployee(Request $request){
-    $name = $request->name;
+    if($name = $request->name){
         $employees = Employee::where('name','LIKE',"%{$name}%")->paginate(1);
+    }else{
+          $employees = Employee::paginate(1);
+      }
         return response()->json($employees);
   }
     public function create()

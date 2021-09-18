@@ -7,13 +7,18 @@ import supplier from "../components/suppliers/index.vue";
 import createemployee from "../components/employee/create.vue";
 import editemployee from "../components/employee/edit.vue";
 import employee from "../components/employee/index.vue";
+import createcategory from "../components/categories/create.vue";
+import editcategory from "../components/categories/edit.vue";
+import category from "../components/categories/index.vue";
 import register from "../components/register.vue";
 import logout from "../components/logout.vue";
 import home from "../components/Home.vue";
 import guest from "../middlewares/guest";
 import auth from "../middlewares/auth";
 import store from "../store/index";
-
+import createproduct from "../components/product/create.vue";
+import editproduct from "../components/product/edit.vue";
+import product from "../components/product/index.vue";
 import checkAuth from "../middlewares/auth-check";
 import middlewarePipeline from "../router/middlewarePipeline";
 Vue.use(VueRouter);
@@ -36,6 +41,7 @@ const routes = [
                 middleware: [auth, checkAuth]
             },
           },
+          //employee
                { name: "createemployee", path: "/createemployee", component: createemployee,
       meta: {
                 middleware: [auth, checkAuth]
@@ -48,7 +54,7 @@ const routes = [
       meta: {
                 middleware: [auth, checkAuth]
             } },
-
+//supplier
              { name: "createsupplier", path: "/createsupplier", component: createsupplier,
       meta: {
                 middleware: [auth, checkAuth]
@@ -61,6 +67,24 @@ const routes = [
       meta: {
                 middleware: [auth, checkAuth]
             } },
+
+//category
+                      { name: "createcategory", path: "/createcategory", component: createcategory,
+      meta: {
+                middleware: [auth, checkAuth]
+            } },
+             { name: "category", path: "/category", component: category,
+      meta: {
+                middleware: [auth, checkAuth]
+            } },
+              { name: "editcategory", path: "/editcategory/:id", component: editcategory,
+      meta: {
+                middleware: [auth, checkAuth]
+            } },
+            // Product Routes
+  { path: '/createproduct', component: createproduct, name:'createproduct'},
+  { path: '/product', component: product, name:'product'},
+  { path: '/editproduct/:id', component: editproduct, name:'editproduct'}
 
 ];
 const router = new VueRouter({

@@ -24,7 +24,10 @@ Route::post('signup','AuthController@signup');
 Route::post('user','AuthController@user');
 
 Route::apiResource('/employee', 'EmployeeController');
-Route::post('searchemployee','EmployeeController@searchemployee');
+Route::any('searchemployee','EmployeeController@searchemployee');
 Route::apiResource('/supplier', 'SupplierController');
-Route::post('searchsupplier','SupplierController@searchsupplier');
+Route::any('searchsupplier','SupplierController@searchsupplier');
+Route::apiResource('/category', 'CategoryController');
+Route::any('searchcategory','CategoryController@searchcategory');
+Route::apiResource('/product', 'ProductController');
 });

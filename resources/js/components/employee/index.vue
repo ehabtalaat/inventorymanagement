@@ -49,7 +49,7 @@
                     </tbody>
                   </table>
                   <pagination :data="employees" class="mx-auto" style="align-items: center;
-justify-content: center;" @pagination-change-page="allEmployee">
+justify-content: center;" @pagination-change-page="filtersearch">
                     <span slot="prev-nav">&lt; Previous</span>
   <span slot="next-nav">Next &gt;</span>
                   </pagination>
@@ -117,7 +117,7 @@ justify-content: center;" @pagination-change-page="allEmployee">
                 this.employees = this.employees.data.filter(employee => {
                   return employee.id != id
                 })
-               this.allEmployee();
+               this.filtersearch();
                })
                .catch(() => {
                 this.$router.push({name: 'employee'})
@@ -132,7 +132,7 @@ justify-content: center;" @pagination-change-page="allEmployee">
   } 
   },
   created(){
-    this.allEmployee();
+    this.filtersearch();
   } 
   
   } 
